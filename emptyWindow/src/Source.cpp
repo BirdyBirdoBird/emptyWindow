@@ -120,5 +120,6 @@ int main(void)
     }
 
     glfwTerminate();
+    std::cout << "first commit";
     return 0;
 }
