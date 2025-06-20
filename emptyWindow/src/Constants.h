@@ -7,40 +7,40 @@ namespace Constants {
     constexpr int SCREEN_HEIGHT = 600;
     constexpr float VERTICES[] = {
         // front face
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  // top right
-         0.5f, -0.5f,  0.5f,  1.0f, 1.0f,  // bottom right
-        -0.5f, -0.5f,  0.5f,  0.0f, 1.0f,  // bottom left
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,  // top left
-
-        // back face
-         0.5f,  0.5f, -0.5f,  1.0f, 0.0f,  // top right
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  // bottom right
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  // bottom left
-        -0.5f,  0.5f, -0.5f,  0.0f, 0.0f,  // top left
-
-        // left face
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  // top right
-        -0.5f, -0.5f,  0.5f,  1.0f, 1.0f,  // bottom right
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  // bottom left
-        -0.5f,  0.5f, -0.5f,  0.0f, 0.0f,  // top left
-
-        // right face
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  // top right
-         0.5f, -0.5f,  0.5f,  1.0f, 1.0f,  // bottom right
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  // bottom left
-         0.5f,  0.5f, -0.5f,  0.0f, 0.0f,  // top left
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0, 
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0, 
+                                          
+        // back face                      
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0,
+                                          
+        // left face                      
+        -0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0,
+        -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0,
+                                          
+        // right face                     
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0,
+         0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0,
+         0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0,
 
          // top face
-          0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  // top right
-         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,  // top left
-         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  // bottom left
-          0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  // bottom right
+          0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 2.0,
+         -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 2.0,
+         -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 2.0,
+          0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 2.0,
 
           // bottom face
-           0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  // top right
-          -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  // top left
-          -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  // bottom left
-           0.5f, -0.5f, -0.5f,  1.0f, 1.0f   // bottom right
+           0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 3.0,
+          -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 3.0,
+          -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 3.0,
+           0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 3.0
     };
 
     constexpr unsigned int INDICES[] = {
@@ -65,8 +65,8 @@ namespace Constants {
         17, 19, 18,
 
         // bottom face
-        20, 21, 23,
-        21, 22, 23
+        20, 23, 21,
+        21, 23, 22
     };
 }
 

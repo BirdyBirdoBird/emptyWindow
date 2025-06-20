@@ -1834,6 +1834,9 @@
     <Image Include="Grass_Texture.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="atlas.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Shaders\4.1.texture.vs" />
