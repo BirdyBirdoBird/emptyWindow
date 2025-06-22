@@ -133,7 +133,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Block.cpp" />
+    <ClCompile Include="src\Chunk.cpp" />
+    <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\Camera.h" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="glm\detail\glm.cpp" />
@@ -142,7 +143,8 @@
     <ClCompile Include="src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Block.h" />
+    <ClInclude Include="src\Chunk.h" />
+    <ClInclude Include="src\Block.h" />
     <ClInclude Include="Eigen\src\Cholesky\LDLT.h" />
     <ClInclude Include="Eigen\src\Cholesky\LLT.h" />
     <ClInclude Include="Eigen\src\Cholesky\LLT_LAPACKE.h" />

@@ -11,6 +11,8 @@
 #include <../glm/gtc/type_ptr.hpp>
 #include "Camera.h"
 #include "Constants.h"
+#include "Block.h";
+
 using namespace Constants;
 int initiateGLFW();
 void initiateGLAD();
@@ -33,29 +35,29 @@ int main(void)
     initiateGLAD();
 
     Shader shader;
+    Block block;
+    //unsigned int VBO = 0, EBO = 0;
+    //glGenBuffers(1, &VBO);
+    //glGenBuffers(1, &EBO);
 
-    unsigned int VBO = 0, EBO = 0;
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
 
+    //glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(VERTICES), VERTICES, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(VERTICES), VERTICES, GL_STATIC_DRAW);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(INDICES), INDICES, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(INDICES), INDICES, GL_STATIC_DRAW);
+    //// position attribute
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
 
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    //// texture coord attribute
+    //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    //glEnableVertexAttribArray(1);
 
-    // texture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    //ID
-    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(5 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    ////ID
+    //glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(5 * sizeof(float)));
+    //glEnableVertexAttribArray(2);
 
     // use front back to choose when to render or not to render faces!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! LATER
 
@@ -114,7 +116,7 @@ int main(void)
         int projectionLoc = glGetUniformLocation(shader.ID, "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-
+        block.use();
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);  
 
         /* Swap front and back buffers */
