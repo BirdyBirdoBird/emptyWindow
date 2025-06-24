@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "Constants.h"
 #include "Block.h";
+#include "Chunk.h"
 
 using namespace Constants;
 int initiateGLFW();
@@ -21,7 +22,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void checkKeyboardMovement();
 
 GLFWwindow* window;
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 2.0f, 16.0f));
 
 bool firstMouse = true;
 float lastX = SCREEN_WIDTH / 2.0;
@@ -35,40 +36,13 @@ int main(void)
     initiateGLAD();
 
     Shader shader;
-    Block block;
-    //unsigned int VBO = 0, EBO = 0;
-    //glGenBuffers(1, &VBO);
-    //glGenBuffers(1, &EBO);
-
-
-    //glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(VERTICES), VERTICES, GL_STATIC_DRAW);
-
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(INDICES), INDICES, GL_STATIC_DRAW);
-
-    //// position attribute
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    //glEnableVertexAttribArray(0);
-
-    //// texture coord attribute
-    //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    //glEnableVertexAttribArray(1);
-
-    ////ID
-    //glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(5 * sizeof(float)));
-    //glEnableVertexAttribArray(2);
-
-    // use front back to choose when to render or not to render faces!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! LATER
-
+    Chunk chunk(0, 0);
+    
     //--- TEXTURES!!!
     unsigned int texture;
     // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // load image, create texture and generate mipmaps
     int width, height, nrChannels;
     // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
@@ -103,7 +77,7 @@ int main(void)
         shader.use();
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, 0.0f, glm::vec3(0.5f, 1.0f, 0.0f));
+        model = glm::rotate(model, 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
@@ -116,8 +90,11 @@ int main(void)
         int projectionLoc = glGetUniformLocation(shader.ID, "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-        block.use();
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);  
+        //block.use();
+        for (Block* block : chunk.blockList) {
+            block->use();
+            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        }
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

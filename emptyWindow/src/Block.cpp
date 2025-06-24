@@ -1,7 +1,10 @@
 #include "Block.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-Block::Block() {
+Block::Block(int x, int y, int z) {
+	this->x = x;
+	this->y = y;
+	this->z = z;
 	fillAll();
 	loadFaceVertecies(frontface, backface, leftface, rightface, topface, bottomface);
 	loadFaceIndecies(frontface, backface, leftface, rightface, topface, bottomface);
@@ -34,71 +37,59 @@ void Block::clearAll() {
 }
 
 void Block::loadFaceVertecies(bool frontface, bool backface, bool leftface, bool rightface, bool topface, bool bottomface) {
-	if (frontface)
-	{
-		faceVertecies.insert(faceVertecies.end(),
+	if (frontface) {
+		faceVertices.insert(faceVertices.end(),
 			{
-			0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f,
-			0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
-			-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,
-			-0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f 
-			}
-			);
+				0.5f + x,  0.5f + y, 0.5f + z, 1.0f, 1.0f, 0.0f,
+				0.5f + x, -0.5f + y, 0.5f + z, 1.0f, 0.0f, 0.0f,
+			   -0.5f + x, -0.5f + y, 0.5f + z, 0.0f, 0.0f, 0.0f,
+			   -0.5f + x,  0.5f + y, 0.5f + z, 0.0f, 1.0f, 0.0f
+			});
 	}
-	if (backface)
-	{
-		faceVertecies.insert(faceVertecies.end(),
+	if (backface) {
+		faceVertices.insert(faceVertices.end(),
 			{
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0,
-			 0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0,
-			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0,
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0,
-			}
-		);
+				0.5f + x,  0.5f + y, -0.5f + z, 1.0f, 1.0f, 0.0f,
+				0.5f + x, -0.5f + y, -0.5f + z, 1.0f, 0.0f, 0.0f,
+			   -0.5f + x, -0.5f + y, -0.5f + z, 0.0f, 0.0f, 0.0f,
+			   -0.5f + x,  0.5f + y, -0.5f + z, 0.0f, 1.0f, 0.0f
+			});
 	}
-	if (leftface)
-	{
-		faceVertecies.insert(faceVertecies.end(),
+	if (leftface) {
+		faceVertices.insert(faceVertices.end(),
 			{
-			-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0,
-			-0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0,
-			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0,
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0,
-			}
-		);
+			   -0.5f + x,  0.5f + y,  0.5f + z, 1.0f, 1.0f, 0.0f,
+			   -0.5f + x, -0.5f + y,  0.5f + z, 1.0f, 0.0f, 0.0f,
+			   -0.5f + x, -0.5f + y, -0.5f + z, 0.0f, 0.0f, 0.0f,
+			   -0.5f + x,  0.5f + y, -0.5f + z, 0.0f, 1.0f, 0.0f
+			});
 	}
-	if (rightface)
-	{
-		faceVertecies.insert(faceVertecies.end(),
+	if (rightface) {
+		faceVertices.insert(faceVertices.end(),
 			{
-			0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0,
-			0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0,
-			0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0,
-			0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0,
-			}
-		);
+				0.5f + x,  0.5f + y,  0.5f + z, 1.0f, 1.0f, 0.0f,
+				0.5f + x, -0.5f + y,  0.5f + z, 1.0f, 0.0f, 0.0f,
+				0.5f + x, -0.5f + y, -0.5f + z, 0.0f, 0.0f, 0.0f,
+				0.5f + x,  0.5f + y, -0.5f + z, 0.0f, 1.0f, 0.0f
+			});
 	}
-	if (topface)
-	{
-		faceVertecies.insert(faceVertecies.end(),
+	if (topface) {
+		faceVertices.insert(faceVertices.end(),
 			{
-			0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0,
-			-0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0,
-			-0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0,
-			0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 1.0,
-			}
-		);
+				0.5f + x,  0.5f + y,  0.5f + z, 1.0f, 1.0f, 1.0f,
+			   -0.5f + x,  0.5f + y,  0.5f + z, 0.0f, 1.0f, 1.0f,
+			   -0.5f + x,  0.5f + y, -0.5f + z, 0.0f, 0.0f, 1.0f,
+				0.5f + x,  0.5f + y, -0.5f + z, 1.0f, 0.0f, 1.0f
+			});
 	}
-	if (bottomface)
-	{
-		faceVertecies.insert(faceVertecies.end(),
+	if (bottomface) {
+		faceVertices.insert(faceVertices.end(),
 			{
-			0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 2.0,
-			-0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 2.0,
-			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 2.0,
-			0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 2.0
-			}
-		);
+				0.5f + x, -0.5f + y,  0.5f + z, 1.0f, 1.0f, 2.0f,
+			   -0.5f + x, -0.5f + y,  0.5f + z, 0.0f, 1.0f, 2.0f,
+			   -0.5f + x, -0.5f + y, -0.5f + z, 0.0f, 0.0f, 2.0f,
+				0.5f + x, -0.5f + y, -0.5f + z, 1.0f, 0.0f, 2.0f
+			});
 	}
 }
 
@@ -187,10 +178,10 @@ void Block::attachToVAO() {
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, faceVertecies.size() * sizeof(float), &faceVertecies.front(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, faceVertices.size() * sizeof(float), &faceVertices.front(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, faceIndecies.size() * sizeof(float), &faceIndecies.front(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, faceIndecies.size() * sizeof(unsigned int), &faceIndecies.front(), GL_STATIC_DRAW);
 
 	// position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
@@ -210,4 +201,10 @@ void Block::attachToVAO() {
 
 void Block::use() {
 	glBindVertexArray(VAO);
+}
+
+void Block::printProperties() {
+	std::cout << "Block x: " << x << "\n";
+	std::cout << "Block y: " << y << "\n";
+	std::cout << "Block z: " << z << "\n";
 }
