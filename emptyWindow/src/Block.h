@@ -15,8 +15,8 @@ public:
 	~Block();
 	void fillAll();
 	void clearAll();
-	void loadFaceVertecies(bool frontface, bool backface, bool leftface, bool rightface, bool topface, bool bottomface);
-	void loadFaceIndecies(bool frontface, bool backface, bool leftface, bool rightface, bool topface, bool bottomface);
+	void loadFaceVertecies();
+	void loadFaceIndecies();
 	void printProperties();
 };
 

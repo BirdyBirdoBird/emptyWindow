@@ -7,8 +7,8 @@ Block::Block(int x, int y, int z) {
 	this->y = y;
 	this->z = z;
 	fillAll();
-	loadFaceVertecies(frontface, backface, leftface, rightface, topface, bottomface);
-	loadFaceIndecies(frontface, backface, leftface, rightface, topface, bottomface);
+	//loadFaceVertecies(frontface, backface, leftface, rightface, topface, bottomface);
+	//loadFaceIndecies(frontface, backface, leftface, rightface, topface, bottomface);
 }
 
 Block::~Block()
@@ -34,7 +34,7 @@ void Block::clearAll() {
 	bottomface = false;
 }
 
-void Block::loadFaceVertecies(bool frontface, bool backface, bool leftface, bool rightface, bool topface, bool bottomface) {
+void Block::loadFaceVertecies() {
 	if (frontface) {
 		faceVertices.insert(faceVertices.end(),
 			{
@@ -91,7 +91,7 @@ void Block::loadFaceVertecies(bool frontface, bool backface, bool leftface, bool
 	}
 }
 
-void Block::loadFaceIndecies(bool frontface, bool backface, bool leftface, bool rightface, bool topface, bool bottomface) {
+void Block::loadFaceIndecies() {
 	int indicesCount = -1;
 
 	if (frontface)

@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 Chunk::Chunk(int x, int y) : X(x), Y(y) {
+    initBlocks();
 	fillBlockVec();
 	buildBuffers();
 }
@@ -13,24 +14,86 @@ Chunk::~Chunk() {
     glDeleteBuffers(1, &EBO);
 }
 
+void Chunk::initBlocks() {
+    for (int x = 0; x < length; x++) {
+        for (int y = 0; y < height; y++) {
+            for (int z = 0; z < width; z++) {
+                blockArray[x][y][z] = AIR; 
+            }
+        }
+    }
+
+    for (int x = 0; x < length; x++) {
+        for (int z = 0; z < width; z++) {
+            blockArray[x][0][z] = DIRT;
+        }
+    }
+}
+
 void Chunk::fillBlockVec() {
     unsigned int vertexOffset = 0;
 
-    for (int l = 0; l < length; l++) {
-        for (int w = 0; w < width; w++) {
-            Block tempBlock(l, 0, w);  // create temp block
+    for (int x = 0; x < length; x++) {
+        for (int y = 0; y < length; y++) {
+            for (int z = 0; z < width; z++) {
+                if (blockArray[x][y][z] != AIR) {
+                    Block tempBlock(x, y, z);
 
-            // Append vertices
-            allVertices.insert(allVertices.end(), tempBlock.faceVertices.begin(), tempBlock.faceVertices.end());
+                    //change block face bools when rendering them(culling)
+                    alternateBlockFaces(&tempBlock, tempBlock.x, tempBlock.y, tempBlock.z);
 
-            // Append indices with offset
-            for (unsigned int index : tempBlock.faceIndecies) {
-                allIndices.push_back(index + vertexOffset);
+                    //load vertecies and indecies to this alternated block
+                    tempBlock.loadFaceVertecies();
+                    tempBlock.loadFaceIndecies();
+
+                    allVertices.insert(allVertices.end(), tempBlock.faceVertices.begin(), tempBlock.faceVertices.end());
+
+                    for (unsigned int index : tempBlock.faceIndecies) {
+                        allIndices.push_back(index + vertexOffset);
+                    }
+
+                    vertexOffset += tempBlock.faceVertices.size() / 6;  // 6 floats per vertex
+                }
             }
-
-            vertexOffset += tempBlock.faceVertices.size() / 6;  // 6 floats per vertex
         }
     }
+}
+
+void Chunk::alternateBlockFaces(Block* block, int x, int y, int z)
+{
+    // RIGHT (+X)
+    if (getBlockType(x + 1, y, z) != AIR) {
+        block->rightface = false;
+    }
+    // LEFT (-X)
+    if (getBlockType(x - 1, y, z) != AIR) {
+        block->leftface = false;
+    }
+    // FRONT (+Z)
+    if (getBlockType(x, y, z + 1) != AIR) {
+        block->frontface = false;
+    }
+    // BACK (-Z)
+    if (getBlockType(x, y, z - 1) != AIR) {
+        block->backface = false;
+    }
+    // TOP (+Y)
+    if (getBlockType(x, y + 1, z) != AIR) {
+        block->topface = false;
+    }
+    // BOTTOM (-Y)
+    if (getBlockType(x, y - 1, z) != AIR) {
+        block->bottomface = false;
+    }
+}
+
+Chunk::blockType Chunk::getBlockType(int x, int y, int z)  {
+    if (x < 0 || x >= width ||
+        y < 0 || y >= height ||
+        z < 0 || z >= length) {
+        return AIR;  
+    }
+    return blockArray[x][y][z];
 }
 
 void Chunk::buildBuffers() {
@@ -63,3 +126,4 @@ void Chunk::render() {
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, allIndices.size(), GL_UNSIGNED_INT, 0);
 }
+
