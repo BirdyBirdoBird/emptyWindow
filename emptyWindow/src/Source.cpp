@@ -37,6 +37,7 @@ int main(void)
 
     Shader shader;
     Chunk chunk(0, 0);
+    Chunk chunk1(-1, -1);
     
     //--- TEXTURES!!!
     unsigned int texture;
@@ -91,6 +92,7 @@ int main(void)
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
         chunk.render();
+        chunk1.render();
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
         std::cout << "FPS: " << 1.0f / deltaTime << "\n";

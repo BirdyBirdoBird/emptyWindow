@@ -2,7 +2,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-Chunk::Chunk(int x, int y) : X(x), Y(y) {
+Chunk::Chunk(int x, int z) {
+    chunkOffsetX = x * 16;
+    chunkOffsetZ = z * 16;
     initBlocks();
 	fillBlockVec();
 	buildBuffers();
@@ -37,10 +39,10 @@ void Chunk::fillBlockVec() {
         for (int y = 0; y < length; y++) {
             for (int z = 0; z < width; z++) {
                 if (blockArray[x][y][z] != AIR) {
-                    Block tempBlock(x, y, z);
+                    Block tempBlock(x + chunkOffsetX, y, z + chunkOffsetZ);
 
                     //change block face bools when rendering them(culling)
-                    alternateBlockFaces(&tempBlock, tempBlock.x, tempBlock.y, tempBlock.z);
+                    alternateBlockFaces(&tempBlock, x, y, z);
 
                     //load vertecies and indecies to this alternated block
                     tempBlock.loadFaceVertecies();

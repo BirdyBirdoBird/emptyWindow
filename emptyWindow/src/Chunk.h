@@ -4,8 +4,6 @@
 #include "Block.h"
 class Chunk
 {
-private:
-	int X = 0, Y = 0;
 public:
 	enum blockType : uint8_t { AIR, DIRT };
 	int width = 16, height = 16, length = 16;
@@ -13,8 +11,9 @@ public:
 	std::vector<float> allVertices;       
 	std::vector<unsigned int> allIndices;
 	unsigned int VAO, VBO, EBO;
+	int chunkOffsetX = 0, chunkOffsetZ;
 
-	Chunk(int x, int y);
+	Chunk(int x, int z);
 	~Chunk();
 
 	void initBlocks();
