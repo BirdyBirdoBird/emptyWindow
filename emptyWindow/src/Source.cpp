@@ -90,12 +90,7 @@ int main(void)
         int projectionLoc = glGetUniformLocation(shader.ID, "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-        //block.use();
-        for (Block* block : chunk.blockList) {
-            block->use();
-            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        }
-
+        chunk.render();
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
         std::cout << "FPS: " << 1.0f / deltaTime << "\n";

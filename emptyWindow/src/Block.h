@@ -8,7 +8,6 @@ public:
 	std::vector<float> faceVertices;
 	std::vector<int> faceIndecies;
 	bool frontface, backface, leftface, rightface, topface, bottomface;
-	unsigned int VAO, VBO, EBO;
 	int x = 0, y = 0, z = 0;
 	
 	
@@ -18,8 +17,6 @@ public:
 	void clearAll();
 	void loadFaceVertecies(bool frontface, bool backface, bool leftface, bool rightface, bool topface, bool bottomface);
 	void loadFaceIndecies(bool frontface, bool backface, bool leftface, bool rightface, bool topface, bool bottomface);
-	void attachToVAO();
-	void use();
 	void printProperties();
 };
 

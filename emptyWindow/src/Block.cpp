@@ -1,6 +1,7 @@
 #include "Block.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 Block::Block(int x, int y, int z) {
 	this->x = x;
 	this->y = y;
@@ -8,14 +9,11 @@ Block::Block(int x, int y, int z) {
 	fillAll();
 	loadFaceVertecies(frontface, backface, leftface, rightface, topface, bottomface);
 	loadFaceIndecies(frontface, backface, leftface, rightface, topface, bottomface);
-	attachToVAO();
 }
 
 Block::~Block()
 {
 	glBindVertexArray(0);
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
 }
 
 void Block::fillAll() {
@@ -168,39 +166,6 @@ void Block::loadFaceIndecies(bool frontface, bool backface, bool leftface, bool 
 			}
 		);
 	}
-}
-
-void Block::attachToVAO() {
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, faceVertices.size() * sizeof(float), &faceVertices.front(), GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, faceIndecies.size() * sizeof(unsigned int), &faceIndecies.front(), GL_STATIC_DRAW);
-
-	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	// texture coord attribute
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	//ID
-	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(5 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-}
-
-void Block::use() {
-	glBindVertexArray(VAO);
 }
 
 void Block::printProperties() {

@@ -5,12 +5,19 @@
 class Chunk
 {
 public:
-	std::list<Block*> blockList;
+	std::vector<float> allVertices;       
+	std::vector<unsigned int> allIndices;
+	unsigned int VAO, VBO, EBO;
 	int width = 16, height = 16, length = 16;
-	int x = 0, y = 0;
 
 	Chunk(int x, int y);
 	~Chunk();
-	void fillBlockQueue();
+
+	void fillBlockVec();
+	void buildBuffers();    // sends data to GPU
+	void render();          // binds VAO and draws
+
+private:
+	int X = 0, Y = 0;
 };
 
