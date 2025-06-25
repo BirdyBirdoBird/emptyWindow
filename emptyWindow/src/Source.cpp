@@ -11,8 +11,8 @@
 #include <../glm/gtc/type_ptr.hpp>
 #include "Camera.h"
 #include "Constants.h"
-#include "Block.h";
 #include "Chunk.h"
+#include "FastNoiseLite.h"
 
 using namespace Constants;
 int initiateGLFW();
@@ -22,7 +22,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void checkKeyboardMovement();
 
 GLFWwindow* window;
-Camera camera(glm::vec3(0.0f, 2.0f, 16.0f));
+Camera camera(glm::vec3(0.0f, 20.0f, 16.0f));
 
 bool firstMouse = true;
 float lastX = SCREEN_WIDTH / 2.0;
@@ -35,10 +35,19 @@ int main(void)
     initiateGLFW();
     initiateGLAD();
 
+    //---- NOISE
+    FastNoiseLite noise;
+
+    // Set basic noise type
+    noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+
+    // Frequency controls how "zoomed in" the noise is (smaller = bigger features)
+    noise.SetFrequency(0.02f);
+
+
     Shader shader;
-    Chunk chunk(0, 0);
-    Chunk chunk1(-1, -1);
-    
+    //Chunk chunk(0, 0, noise);
+    std::vector<Chunk*> chunks;
     //--- TEXTURES!!!
     unsigned int texture;
     // set the texture wrapping parameters
@@ -65,7 +74,11 @@ int main(void)
 
     stbi_image_free(data);
 
-
+    for (int i = 0; i < 16; i++) {
+        for (int k = 0; k < 16; k++) {
+            chunks.push_back(new Chunk(i, k, noise));  // crashes
+        }
+    }
 
     while (!glfwWindowShouldClose(window)) {
         checkKeyboardMovement();
@@ -90,12 +103,13 @@ int main(void)
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         int projectionLoc = glGetUniformLocation(shader.ID, "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        for (Chunk *c : chunks) {
+            c->render();
+        }
 
-        chunk.render();
-        chunk1.render();
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
-        std::cout << "FPS: " << 1.0f / deltaTime << "\n";
+        //std::cout << "FPS: " << 1.0f / deltaTime << "\n";
         /* Poll for and process events */
         glfwPollEvents();
     }

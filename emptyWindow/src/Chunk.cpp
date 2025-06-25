@@ -1,8 +1,9 @@
 #include "Chunk.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "FastNoiseLite.h"
 
-Chunk::Chunk(int x, int z) {
+Chunk::Chunk(int x, int z, FastNoiseLite& noise) : noise(noise) {
     chunkOffsetX = x * 16;
     chunkOffsetZ = z * 16;
     initBlocks();
@@ -27,7 +28,9 @@ void Chunk::initBlocks() {
 
     for (int x = 0; x < length; x++) {
         for (int z = 0; z < width; z++) {
-            blockArray[x][0][z] = DIRT;
+            int h = generateHeight(x + chunkOffsetX, z + chunkOffsetZ);
+            blockArray[x][h][z] = DIRT;
+            fillDown(x, h, z);
         }
     }
 }
@@ -36,7 +39,7 @@ void Chunk::fillBlockVec() {
     unsigned int vertexOffset = 0;
 
     for (int x = 0; x < length; x++) {
-        for (int y = 0; y < length; y++) {
+        for (int y = 0; y < height; y++) {
             for (int z = 0; z < width; z++) {
                 if (blockArray[x][y][z] != AIR) {
                     Block tempBlock(x + chunkOffsetX, y, z + chunkOffsetZ);
@@ -129,3 +132,14 @@ void Chunk::render() {
     glDrawElements(GL_TRIANGLES, allIndices.size(), GL_UNSIGNED_INT, 0);
 }
 
+int Chunk::generateHeight(int x, int z) {
+    float n = noise.GetNoise(float(x), float(z));
+    return n = (n + 1.0f) / 2.0f * height / 2;
+}
+
+void Chunk::fillDown(int x, int h, int z) {
+    for (int i = h - 1; i > 0; i--)
+    {
+        blockArray[x][i][z] = DIRT;
+    }
+}
