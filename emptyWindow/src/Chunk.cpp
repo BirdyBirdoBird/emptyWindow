@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "FastNoiseLite.h"
+#include "GrassBlock.h"
 
 Chunk::Chunk(int x, int z, FastNoiseLite& noise) : noise(noise) {
     chunkOffsetX = x * 16;
@@ -29,7 +30,7 @@ void Chunk::initBlocks() {
     for (int x = 0; x < length; x++) {
         for (int z = 0; z < width; z++) {
             int h = generateHeight(x + chunkOffsetX, z + chunkOffsetZ);
-            blockArray[x][h][z] = DIRT;
+            blockArray[x][h][z] = GRASS;
             fillDown(x, h, z);
         }
     }
@@ -42,22 +43,28 @@ void Chunk::fillBlockVec() {
         for (int y = 0; y < height; y++) {
             for (int z = 0; z < width; z++) {
                 if (blockArray[x][y][z] != AIR) {
-                    Block tempBlock(x + chunkOffsetX, y, z + chunkOffsetZ);
+                    Block* tempBlock;
+                    if (blockArray[x][y][z] == GRASS) {
+                        tempBlock = new GrassBlock(x + chunkOffsetX, y, z + chunkOffsetZ);
+                    }
+                    else {
+                        tempBlock = new Block(x + chunkOffsetX, y, z + chunkOffsetZ);
+                    }
 
                     //change block face bools when rendering them(culling)
-                    alternateBlockFaces(&tempBlock, x, y, z);
+                    alternateBlockFaces(tempBlock, x, y, z);
 
                     //load vertecies and indecies to this alternated block
-                    tempBlock.loadFaceVertecies();
-                    tempBlock.loadFaceIndecies();
+                    tempBlock->loadFaceVertecies(); 
+                    tempBlock->loadFaceIndecies();
 
-                    allVertices.insert(allVertices.end(), tempBlock.faceVertices.begin(), tempBlock.faceVertices.end());
+                    allVertices.insert(allVertices.end(), tempBlock->faceVertices.begin(), tempBlock->faceVertices.end());
 
-                    for (unsigned int index : tempBlock.faceIndecies) {
+                    for (unsigned int index : tempBlock->faceIndecies) {
                         allIndices.push_back(index + vertexOffset);
                     }
 
-                    vertexOffset += tempBlock.faceVertices.size() / 6;  // 6 floats per vertex
+                    vertexOffset += tempBlock->faceVertices.size() / 6;  // 6 floats per vertex
                 }
             }
         }

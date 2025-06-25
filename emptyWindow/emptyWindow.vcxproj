@@ -742,6 +742,8 @@
     <ClInclude Include="glm\vector_relational.hpp" />
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\FastNoiseLite.h" />
+    <ClInclude Include="src\BlockTypes.h" />
+    <ClInclude Include="src\GrassBlock.h" />
     <ClInclude Include="src\Shaders\Shader.h" />
     <ClInclude Include="vendor\stb_image.h" />
   </ItemGroup>

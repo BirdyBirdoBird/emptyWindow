@@ -1844,6 +1844,12 @@
     <ClInclude Include="src\FastNoiseLite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\BlockTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GrassBlock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Grass_Texture.jpg">

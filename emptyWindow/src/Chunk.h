@@ -9,7 +9,7 @@ class Chunk
 private:
 	FastNoiseLite noise;
 public:
-	enum blockType : uint8_t { AIR, DIRT };
+	enum blockType : uint8_t { AIR, DIRT, GRASS};
 	int width = 16, height = 16, length = 16;
 	blockType blockArray[16][16][16];
 	std::vector<float> allVertices;       

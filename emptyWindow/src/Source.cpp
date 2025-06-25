@@ -42,7 +42,7 @@ int main(void)
     noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
 
     // Frequency controls how "zoomed in" the noise is (smaller = bigger features)
-    noise.SetFrequency(0.02f);
+    noise.SetFrequency(0.03f);
 
 
     Shader shader;
@@ -74,9 +74,9 @@ int main(void)
 
     stbi_image_free(data);
 
-    for (int i = 0; i < 16; i++) {
-        for (int k = 0; k < 16; k++) {
-            chunks.push_back(new Chunk(i, k, noise));  // crashes
+    for (int i = -8; i < 8; i++) {
+        for (int k = -8; k < 8; k++) {
+             chunks.push_back(new Chunk(i, k, noise));
         }
     }
 
@@ -109,7 +109,7 @@ int main(void)
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
-        //std::cout << "FPS: " << 1.0f / deltaTime << "\n";
+        std::cout << "FPS: " << 1.0f / deltaTime << "\n";
         /* Poll for and process events */
         glfwPollEvents();
     }

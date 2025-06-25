@@ -1,10 +1,12 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include "BlockTypes.h"
 class Block
 {
-public:
+private:
 	int faceCount = 0;
+public:
 	std::vector<float> faceVertices;
 	std::vector<int> faceIndecies;
 	bool frontface, backface, leftface, rightface, topface, bottomface;
@@ -12,10 +14,10 @@ public:
 	
 	
 	Block(int x, int y, int z);
-	~Block();
+	virtual ~Block();
 	void fillAll();
 	void clearAll();
-	void loadFaceVertecies();
+	virtual void loadFaceVertecies();
 	void loadFaceIndecies();
 	void printProperties();
 };
