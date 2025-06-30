@@ -55,8 +55,7 @@ int main(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     // load image, create texture and generate mipmaps
     int width, height, nrChannels;
-    // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-    stbi_set_flip_vertically_on_load(true);//start from bottom left instead of top left
+    stbi_set_flip_vertically_on_load(true); //start from bottom left instead of top left
     unsigned char* data = stbi_load("atlas.png", &width, &height, &nrChannels, 0);
     if (data)
     {
@@ -64,7 +63,7 @@ int main(void)
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
     else
@@ -177,4 +176,5 @@ void checkKeyboardMovement() {
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
     camera.moveFast(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS);
+    camera.spacebar(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS, deltaTime);
 }
