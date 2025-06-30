@@ -3,6 +3,9 @@
 #include <GLFW/glfw3.h>
 #include "FastNoiseLite.h"
 #include "GrassBlock.h"
+#include "Constants.h"
+using namespace Constants;
+
 
 Chunk::Chunk(int x, int z, FastNoiseLite& noise) : noise(noise) {
     chunkOffsetX = x * 16;
@@ -19,16 +22,16 @@ Chunk::~Chunk() {
 }
 
 void Chunk::initBlocks() {
-    for (int x = 0; x < length; x++) {
-        for (int y = 0; y < height; y++) {
-            for (int z = 0; z < width; z++) {
+    for (int x = 0; x < CHUNK_LENGTH; x++) {
+        for (int y = 0; y < CHUNK_HEIGHT; y++) {
+            for (int z = 0; z < CHUNK_WIDTH; z++) {
                 blockArray[x][y][z] = AIR; 
             }
         }
     }
 
-    for (int x = 0; x < length; x++) {
-        for (int z = 0; z < width; z++) {
+    for (int x = 0; x < CHUNK_LENGTH; x++) {
+        for (int z = 0; z < CHUNK_WIDTH; z++) {
             int h = generateHeight(x + chunkOffsetX, z + chunkOffsetZ);
             blockArray[x][h][z] = GRASS;
             fillDown(x, h, z);
@@ -39,9 +42,10 @@ void Chunk::initBlocks() {
 void Chunk::fillBlockVec() {
     unsigned int vertexOffset = 0;
 
-    for (int x = 0; x < length; x++) {
-        for (int y = 0; y < height; y++) {
-            for (int z = 0; z < width; z++) {
+    for (int x = 0; x < CHUNK_LENGTH; x++) {
+        for (int y = 0; y < CHUNK_HEIGHT; y++) {
+            for (int z = 0; z < CHUNK_WIDTH; z++) {
+
                 if (blockArray[x][y][z] != AIR) {
                     Block* tempBlock;
                     if (blockArray[x][y][z] == GRASS) {
@@ -65,7 +69,10 @@ void Chunk::fillBlockVec() {
                     }
 
                     vertexOffset += tempBlock->faceVertices.size() / 6;  // 6 floats per vertex
+
+                    delete tempBlock;
                 }
+                
             }
         }
     }
@@ -100,9 +107,9 @@ void Chunk::alternateBlockFaces(Block* block, int x, int y, int z)
 }
 
 Chunk::blockType Chunk::getBlockType(int x, int y, int z)  {
-    if (x < 0 || x >= width ||
-        y < 0 || y >= height ||
-        z < 0 || z >= length) {
+    if (x < 0 || x >= CHUNK_WIDTH ||
+        y < 0 || y >= CHUNK_HEIGHT ||
+        z < 0 || z >= CHUNK_LENGTH) {
         return AIR;  
     }
     return blockArray[x][y][z];
@@ -141,7 +148,7 @@ void Chunk::render() {
 
 int Chunk::generateHeight(int x, int z) {
     float n = noise.GetNoise(float(x), float(z));
-    return n = (n + 1.0f) / 2.0f * height / 2;
+    return n = (n + 1.0f) / 2.0f * CHUNK_HEIGHT / 2;
 }
 
 void Chunk::fillDown(int x, int h, int z) {

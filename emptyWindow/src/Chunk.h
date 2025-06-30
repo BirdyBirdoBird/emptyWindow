@@ -3,6 +3,8 @@
 #include <list>
 #include "Block.h"
 #include "FastNoiseLite.h"
+#include "Constants.h"
+using namespace Constants;
 
 class Chunk
 {
@@ -10,8 +12,7 @@ private:
 	FastNoiseLite noise;
 public:
 	enum blockType : uint8_t { AIR, DIRT, GRASS};
-	int width = 16, height = 16, length = 16;
-	blockType blockArray[16][16][16];
+	blockType blockArray[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH];
 	std::vector<float> allVertices;       
 	std::vector<unsigned int> allIndices;
 	unsigned int VAO, VBO, EBO;
