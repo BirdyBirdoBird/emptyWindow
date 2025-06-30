@@ -141,6 +141,7 @@
     <ClCompile Include="glm\glm.cppm" />
     <ClCompile Include="src\Shaders\Shader.cpp" />
     <ClCompile Include="src\Source.cpp" />
+    <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Chunk.h" />
@@ -746,6 +747,7 @@
     <ClInclude Include="src\GrassBlock.h" />
     <ClInclude Include="src\Shaders\Shader.h" />
     <ClInclude Include="vendor\stb_image.h" />
+    <ClInclude Include="src\World.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="atlas.png" />

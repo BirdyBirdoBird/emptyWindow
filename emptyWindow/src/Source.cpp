@@ -13,6 +13,7 @@
 #include "Constants.h"
 #include "Chunk.h"
 #include "FastNoiseLite.h"
+#include "World.h"
 
 using namespace Constants;
 int initiateGLFW();
@@ -35,19 +36,8 @@ int main(void)
     initiateGLFW();
     initiateGLAD();
 
-    //---- NOISE
-    FastNoiseLite noise;
-
-    // Set basic noise type
-    noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-
-    // Frequency controls how "zoomed in" the noise is (smaller = bigger features)
-    noise.SetFrequency(0.03f);
-
-
     Shader shader;
-    //Chunk chunk(0, 0, noise);
-    std::vector<Chunk*> chunks;
+
     //--- TEXTURES!!!
     unsigned int texture;
     // set the texture wrapping parameters
@@ -73,11 +63,7 @@ int main(void)
 
     stbi_image_free(data);
 
-    for (int i = -8; i < 8; i++) {
-        for (int k = -8; k < 8; k++) {
-             chunks.push_back(new Chunk(i, k, noise));
-        }
-    }
+    World world(camera.Position);
 
     while (!glfwWindowShouldClose(window)) {
         checkKeyboardMovement();
@@ -102,8 +88,13 @@ int main(void)
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         int projectionLoc = glGetUniformLocation(shader.ID, "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-        for (Chunk *c : chunks) {
-            c->render();
+
+        world.addNearbyChunks(camera.Position);
+        std::map<std::pair<int, int>, Chunk*>::iterator it = world.worldChunks.begin();
+        while (it != world.worldChunks.end())
+        {
+            it->second->render();
+            it++;
         }
 
         /* Swap front and back buffers */
