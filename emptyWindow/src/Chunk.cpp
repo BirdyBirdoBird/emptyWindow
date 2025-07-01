@@ -4,15 +4,18 @@
 #include "FastNoiseLite.h"
 #include "GrassBlock.h"
 #include "Constants.h"
+#include "map"
 using namespace Constants;
 
 
-Chunk::Chunk(int x, int z, FastNoiseLite& noise) : noise(noise) {
-    chunkOffsetX = x * 16;
-    chunkOffsetZ = z * 16;
+Chunk::Chunk(int x, int z, FastNoiseLite& noise, std::map<std::pair<int, int>, Chunk*>* worldChunks) : noise(noise), chunkX(x), chunkZ(z), worldChunks(worldChunks) {
+    chunkBlockOffsetX = x * 16;
+    chunkBlockOffsetZ = z * 16;
+
+    std::cout << "Created Chunk at (" << chunkX << ", " << chunkZ << ")\n";
     initBlocks();
-	fillBlockVec();
-	buildBuffers();
+	//fillBlockVec();
+	//buildBuffers();
 }
 
 Chunk::~Chunk() {
@@ -32,7 +35,7 @@ void Chunk::initBlocks() {
 
     for (int x = 0; x < CHUNK_LENGTH; x++) {
         for (int z = 0; z < CHUNK_WIDTH; z++) {
-            int h = generateHeight(x + chunkOffsetX, z + chunkOffsetZ);
+            int h = generateHeight(x + chunkBlockOffsetX, z + chunkBlockOffsetZ);
             blockArray[x][h][z] = GRASS;
             fillDown(x, h, z);
         }
@@ -49,10 +52,10 @@ void Chunk::fillBlockVec() {
                 if (blockArray[x][y][z] != AIR) {
                     Block* tempBlock;
                     if (blockArray[x][y][z] == GRASS) {
-                        tempBlock = new GrassBlock(x + chunkOffsetX, y, z + chunkOffsetZ);
+                        tempBlock = new GrassBlock(x + chunkBlockOffsetX, y, z + chunkBlockOffsetZ);
                     }
                     else {
-                        tempBlock = new Block(x + chunkOffsetX, y, z + chunkOffsetZ);
+                        tempBlock = new Block(x + chunkBlockOffsetX, y, z + chunkBlockOffsetZ);
                     }
 
                     //change block face bools when rendering them(culling)
@@ -80,30 +83,57 @@ void Chunk::fillBlockVec() {
 
 void Chunk::alternateBlockFaces(Block* block, int x, int y, int z)
 {
-    // RIGHT (+X)
-    if (getBlockType(x + 1, y, z) != AIR) {
-        block->rightface = false;
-    }
-    // LEFT (-X)
-    if (getBlockType(x - 1, y, z) != AIR) {
-        block->leftface = false;
-    }
-    // FRONT (+Z)
-    if (getBlockType(x, y, z + 1) != AIR) {
-        block->frontface = false;
-    }
-    // BACK (-Z)
-    if (getBlockType(x, y, z - 1) != AIR) {
-        block->backface = false;
-    }
-    // TOP (+Y)
-    if (getBlockType(x, y + 1, z) != AIR) {
-        block->topface = false;
-    }
-    // BOTTOM (-Y)
-    if (getBlockType(x, y - 1, z) != AIR) {
-        block->bottomface = false;
-    }
+    // Lambda to check neighbor block type, even outside current chunk
+    auto getBlockTypeWithChunk = [&](int nx, int ny, int nz) -> blockType {
+        // If inside current chunk
+        if (nx >= 0 && nx < CHUNK_WIDTH &&
+            ny >= 0 && ny < CHUNK_HEIGHT &&
+            nz >= 0 && nz < CHUNK_LENGTH) {
+            return blockArray[nx][ny][nz];
+        }
+
+        // Outside current chunk, check neighboring chunk
+        int neighborChunkX = chunkX;
+        int neighborChunkZ = chunkZ;
+        int localX = nx, localZ = nz;
+
+        if (nx < 0) {
+            neighborChunkX -= 1;
+            localX = CHUNK_WIDTH - 1;
+        }
+        else if (nx >= CHUNK_WIDTH) {
+            neighborChunkX += 1;
+            localX = 0;
+        }
+
+        if (nz < 0) {
+            neighborChunkZ -= 1;
+            localZ = CHUNK_LENGTH - 1;
+        }
+        else if (nz >= CHUNK_LENGTH) {
+            neighborChunkZ += 1;
+            localZ = 0;
+        }
+
+        // Check if neighbor chunk exists
+        auto it = worldChunks->find({ neighborChunkX, neighborChunkZ });
+        if (it != worldChunks->end()) {
+            Chunk* neighbor = it->second;
+            if (ny >= 0 && ny < CHUNK_HEIGHT) {
+                return neighbor->getBlockType(localX, ny, localZ);
+            }
+        }
+
+        return AIR; // No neighbor chunk means air
+        };
+
+    // Check all 6 directions
+    if (getBlockTypeWithChunk(x + 1, y, z) != AIR) block->rightface = false;
+    if (getBlockTypeWithChunk(x - 1, y, z) != AIR) block->leftface = false;
+    if (getBlockTypeWithChunk(x, y, z + 1) != AIR) block->frontface = false;
+    if (getBlockTypeWithChunk(x, y, z - 1) != AIR) block->backface = false;
+    if (getBlockTypeWithChunk(x, y + 1, z) != AIR) block->topface = false;
+    if (getBlockTypeWithChunk(x, y - 1, z) != AIR) block->bottomface = false;
 }
 
 Chunk::blockType Chunk::getBlockType(int x, int y, int z)  {

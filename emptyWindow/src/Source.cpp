@@ -78,7 +78,7 @@ int main(void)
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::rotate(model, 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 10000.0f);
 
         glm::mat4 view = camera.GetViewMatrix();
 
@@ -99,7 +99,8 @@ int main(void)
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
-        std::cout << "FPS: " << 1.0f / deltaTime << "\n";
+        //std::cout << "FPS: " << 1.0f / deltaTime << "\n";
+        //std::cout << "X: " << (int)camera.Position.x << "\n" << "Z: " << (int)camera.Position.z << "\n";
         /* Poll for and process events */
         glfwPollEvents();
     }

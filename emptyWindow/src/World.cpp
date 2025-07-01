@@ -19,18 +19,31 @@ World::World(glm::vec3 cameraPos) {
 
 void World::addNearbyChunks(glm::vec3 location)
 {
-	// Get current player position in chunk coords
-	int xPos = (int)ceil(location.x / 16);
-	int zPos = (int)ceil(location.z / 16);
+	int xPos = (int)floor(location.x / 16.0f);
+	int zPos = (int)floor(location.z / 16.0f);
 
 	deleteFarChunks(xPos, zPos);
+
+	std::vector<Chunk*> newChunks;
 
 	for (int x = -renderDistance; x < renderDistance; x++)
 	{
 		for (int z = -renderDistance; z < renderDistance; z++)
 		{
-			addChunkAtLocation(xPos + x, zPos + z);
+			int cx = xPos + x;
+			int cz = zPos + z;
+
+			if (worldChunks.find({ cx, cz }) == worldChunks.end()) {
+				Chunk* chunk = new Chunk(cx, cz, noise, &worldChunks);
+				worldChunks[{cx, cz}] = chunk;
+				newChunks.push_back(chunk);
+			}
 		}
+	}
+
+	for (Chunk* chunk : newChunks) {
+		chunk->fillBlockVec(); 
+		chunk->buildBuffers();   
 	}
 }
 
@@ -53,11 +66,4 @@ void World::deleteFarChunks(int xPos, int zPos) {
 			++it;
 		}
 	}
-}
-void World::addChunkAtLocation(int x, int z) {
-	if (worldChunks.find(std::make_pair(x, z)) != worldChunks.end())
-		return;
-
-	Chunk* chunk = new Chunk(x, z, noise);
-	worldChunks.insert(std::make_pair(std::make_pair(x, z), chunk));
 }

@@ -4,6 +4,7 @@
 #include "Block.h"
 #include "FastNoiseLite.h"
 #include "Constants.h"
+#include "map"
 using namespace Constants;
 
 class Chunk
@@ -16,9 +17,11 @@ public:
 	std::vector<float> allVertices;       
 	std::vector<unsigned int> allIndices;
 	unsigned int VAO, VBO, EBO;
-	int chunkOffsetX = 0, chunkOffsetZ;
+	int chunkBlockOffsetX, chunkBlockOffsetZ;
+	int chunkX = 0, chunkZ = 0;
+	std::map<std::pair<int, int>, Chunk*> *worldChunks;
 
-	Chunk(int x, int z, FastNoiseLite& noise);
+	Chunk(int x, int z, FastNoiseLite& noise, std::map<std::pair<int, int>, Chunk*>* worldChunks);
 	~Chunk();
 
 	void initBlocks();
